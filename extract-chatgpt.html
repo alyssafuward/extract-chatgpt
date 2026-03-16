@@ -169,8 +169,6 @@
     .stat-value { font-size: 1.6rem; font-weight: 600; color: var(--accent); }
     .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
 
-    .output-section { margin-top: 32px; display: none; }
-
     .output-header {
       display: flex;
       justify-content: space-between;
@@ -180,22 +178,7 @@
 
     .output-title { font-weight: 600; font-size: 0.95rem; }
 
-    .output-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
-      font-size: 0.82rem;
-      line-height: 1.7;
-      color: #ccc;
-      max-height: 320px;
-      overflow-y: auto;
-      white-space: pre-wrap;
-      word-break: break-word;
-      font-family: "SF Mono", "Fira Code", monospace;
-    }
-
-    .copy-btn-wrap { display: flex; gap: 8px; margin-top: 12px; }
+    .btn-wrap { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
 
     .notice {
       background: #1a1f18;
@@ -236,17 +219,71 @@
 
     hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
 
-    .prompt-section { margin-top: 32px; display: none; }
+    .results-section { margin-top: 32px; display: none; }
 
-    .prompt-box {
+    .prompt-textarea {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 20px;
+      padding: 16px;
       font-size: 0.88rem;
       line-height: 1.7;
       color: var(--text);
+      width: 100%;
+      min-height: 280px;
+      resize: vertical;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .prompt-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .cover-box {
+      background: #1a1f18;
+      border: 1px solid #2e3a2a;
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: #c8dcc0;
       white-space: pre-wrap;
+      font-style: italic;
+    }
+
+    .cap-status {
+      margin-top: 10px;
+      font-size: 0.82rem;
+      padding: 6px 12px;
+      border-radius: 6px;
+      display: none;
+    }
+
+    .cap-status.complete {
+      display: block;
+      background: #1a2318;
+      color: #7db87d;
+      border: 1px solid #2e4a2a;
+    }
+
+    .cap-status.capped {
+      display: block;
+      background: #211e14;
+      color: #c8a84a;
+      border: 1px solid #3a3220;
+    }
+
+    .section-label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+
+    .section-sub {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 10px;
     }
 
     .badge {
@@ -259,6 +296,62 @@
       font-weight: 600;
       margin-left: 8px;
     }
+
+    .cap-control {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .cap-label { font-size: 0.85rem; color: var(--muted); white-space: nowrap; }
+
+    .seg {
+      display: flex;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .seg-btn {
+      background: var(--surface);
+      color: var(--muted);
+      border: none;
+      border-right: 1px solid var(--border);
+      padding: 7px 16px;
+      font-size: 0.83rem;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .seg-btn:last-child { border-right: none; }
+    .seg-btn:hover { background: #222226; color: var(--text); }
+    .seg-btn.active { background: var(--accent); color: #fff; }
+
+    .cap-custom {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.83rem;
+      color: var(--muted);
+    }
+
+    .cap-custom.visible { display: flex; }
+
+    .cap-input {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 0.83rem;
+      width: 72px;
+      text-align: right;
+    }
+
+    .cap-input:focus { outline: none; border-color: var(--accent); }
 
     scrollbar-width { thin; }
     ::-webkit-scrollbar { width: 6px; }
@@ -291,6 +384,21 @@
       <span>All processing happens locally in your browser. Your conversations are never sent to any server.</span>
     </div>
 
+    <div class="cap-control">
+      <span class="cap-label">Output size limit</span>
+      <div class="seg" id="cap-seg">
+        <button class="seg-btn" data-cap="2" onclick="setCap(this)">2 MB</button>
+        <button class="seg-btn" data-cap="5" onclick="setCap(this)">5 MB</button>
+        <button class="seg-btn active" data-cap="10" onclick="setCap(this)">10 MB</button>
+        <button class="seg-btn" data-cap="0" onclick="setCap(this)">All</button>
+        <button class="seg-btn" data-cap="custom" onclick="setCap(this)">Custom</button>
+      </div>
+      <div class="cap-custom" id="cap-custom">
+        <input class="cap-input" type="number" id="cap-input" value="10" min="1" max="9999" />
+        <span>MB</span>
+      </div>
+    </div>
+
     <div class="progress-wrap" id="progress-wrap">
       <div class="progress-bar-bg"><div class="progress-bar" id="progress-bar"></div></div>
       <div class="progress-label" id="progress-label">Processing…</div>
@@ -302,26 +410,32 @@
       <div class="stat-card"><div class="stat-value" id="stat-tokens">—</div><div class="stat-label">est. words extracted</div></div>
     </div>
 
-    <div class="output-section" id="output-section">
-      <div class="output-header">
-        <span class="output-title">Extracted data <span class="badge" id="output-size-badge"></span></span>
-      </div>
-      <div class="output-box" id="output-box"></div>
-      <div class="copy-btn-wrap">
-        <button class="btn" id="copy-data-btn" onclick="copyOutput('output-box', this)">Copy extracted data</button>
-        <button class="btn btn-outline" id="download-btn" onclick="downloadOutput()">Download as .txt</button>
-      </div>
-    </div>
-
-    <div class="prompt-section" id="prompt-section">
+    <div class="results-section" id="results-section">
       <hr>
-      <div class="output-header">
-        <span class="output-title">Ready-to-use Claude prompt</span>
+
+      <div class="section-label">Step 1 — Download your extracted data</div>
+      <div class="section-sub">This file contains your conversation titles and all your messages. Attach it to Claude.</div>
+      <div class="btn-wrap">
+        <button class="btn" id="download-data-btn" onclick="downloadData()">Download extracted data (.txt) <span class="badge" id="output-size-badge"></span></button>
       </div>
-      <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 12px;">Paste the extracted data into Claude first, then send this prompt (or combine them).</p>
-      <div class="prompt-box" id="prompt-box"></div>
-      <div class="copy-btn-wrap">
-        <button class="btn btn-outline" onclick="copyOutput('prompt-box', this)">Copy prompt</button>
+      <div class="cap-status" id="cap-status"></div>
+
+      <hr>
+
+      <div class="section-label">Step 2 — Edit and download the analysis prompt</div>
+      <div class="section-sub">Modify this prompt if you want, then download it and attach it to the same Claude conversation.</div>
+      <textarea class="prompt-textarea" id="prompt-textarea" spellcheck="false"></textarea>
+      <div class="btn-wrap">
+        <button class="btn btn-outline" onclick="downloadPrompt()">Download prompt (.txt)</button>
+      </div>
+
+      <hr>
+
+      <div class="section-label">Step 3 — Open Claude and send this message</div>
+      <div class="section-sub">Attach both downloaded files, then send the message below to kick things off.</div>
+      <div class="cover-box" id="cover-box"></div>
+      <div class="btn-wrap">
+        <button class="btn btn-outline" onclick="copyCover(this)">Copy message</button>
       </div>
     </div>
   </div>
@@ -356,6 +470,29 @@ https://github.com/nodeca/pako/blob/main/LICENSE
       handleFiles(e.dataTransfer.files);
     });
     fileInput.addEventListener('change', e => handleFiles(e.target.files));
+
+    // ── Cap control ──────────────────────────────────────────────────────────
+    function setCap(btn) {
+      document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const custom = document.getElementById('cap-custom');
+      if (btn.dataset.cap === 'custom') {
+        custom.classList.add('visible');
+      } else {
+        custom.classList.remove('visible');
+      }
+    }
+
+    function getCapBytes() {
+      const active = document.querySelector('.seg-btn.active');
+      if (!active) return 10 * 1024 * 1024;
+      if (active.dataset.cap === '0') return Infinity; // All
+      if (active.dataset.cap === 'custom') {
+        const val = parseFloat(document.getElementById('cap-input').value) || 10;
+        return val * 1024 * 1024;
+      }
+      return parseFloat(active.dataset.cap) * 1024 * 1024;
+    }
 
     // ── Main entry ───────────────────────────────────────────────────────────
     async function handleFiles(fileList) {
@@ -396,7 +533,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
       }
 
       setProgress(65, 'Extracting your messages…');
-      const { output, userMessageCount, wordCount } = extractProfile(allConversations);
+      const capBytes = getCapBytes();
+      const { output, userMessageCount, wordCount, capped } = extractProfile(allConversations, capBytes);
 
       setProgress(90, 'Formatting output…');
       await sleep(100);
@@ -407,15 +545,22 @@ https://github.com/nodeca/pako/blob/main/LICENSE
       document.getElementById('stat-tokens').textContent = fmt(wordCount);
       document.getElementById('stats-grid').classList.remove('hidden');
 
-      // Output
-      const sizeKB = Math.round(new Blob([output]).size / 1024);
-      document.getElementById('output-size-badge').textContent = sizeKB + ' KB';
-      document.getElementById('output-box').textContent = output;
-      document.getElementById('output-section').style.display = 'block';
+      // Store output for download
+      window._outputText = output;
+      const sizeBytes = new Blob([output]).size;
+      document.getElementById('output-size-badge').textContent = fmtBytes(sizeBytes);
+      document.getElementById('cap-status').className = 'cap-status ' + (capped ? 'capped' : 'complete');
+      document.getElementById('cap-status').textContent = capped
+        ? `Cap reached — includes your most recent conversations up to ${fmtBytes(sizeBytes)}`
+        : `All data included — ${fmtBytes(sizeBytes)} total`;
 
-      // Prompt
-      document.getElementById('prompt-box').textContent = buildPrompt();
-      document.getElementById('prompt-section').style.display = 'block';
+      // Prompt (editable textarea)
+      document.getElementById('prompt-textarea').value = buildPrompt();
+
+      // Cover message
+      document.getElementById('cover-box').textContent = buildCoverMessage();
+
+      document.getElementById('results-section').style.display = 'block';
 
       setProgress(100, 'Done!');
       setStep(3);
@@ -438,12 +583,11 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     }
 
     // ── Core extraction ──────────────────────────────────────────────────────
-    function extractProfile(conversations) {
-      // Sort by create_time descending (most recent first), cap at 400 convos
+    function extractProfile(conversations, capBytes = Infinity) {
+      // Sort by create_time descending (most recent first)
       const sorted = conversations
         .filter(c => c && (c.create_time || c.mapping))
-        .sort((a, b) => (b.create_time || 0) - (a.create_time || 0))
-        .slice(0, 400);
+        .sort((a, b) => (b.create_time || 0) - (a.create_time || 0));
 
       let userMessageCount = 0;
       let wordCount = 0;
@@ -467,13 +611,12 @@ https://github.com/nodeca/pako/blob/main/LICENSE
       lines.push('--- YOUR MESSAGES (user turns only) ---');
       lines.push('');
 
-      // Extract user messages, capped at ~80KB of text
-      const TARGET_CHARS = 80000;
-      let charCount = 0;
-      let stopped = false;
+      // Extract user messages — stop when output exceeds capBytes
+      let byteCount = new Blob([lines.join('\n')]).size;
+      let capped = false;
 
       for (const convo of sorted) {
-        if (stopped) break;
+        if (capped) break;
         const msgs = extractUserMessages(convo);
         if (msgs.length === 0) continue;
 
@@ -481,23 +624,29 @@ https://github.com/nodeca/pako/blob/main/LICENSE
           ? new Date(convo.create_time * 1000).toLocaleDateString()
           : '';
         const titleLine = `[${convoDate ? convoDate + ' — ' : ''}${(convo.title || 'Untitled').trim()}]`;
-        lines.push(titleLine);
+        const convoLines = [titleLine];
 
         for (const msg of msgs) {
-          if (charCount + msg.length > TARGET_CHARS) { stopped = true; break; }
-          lines.push('> ' + msg.replace(/\n+/g, ' ').trim());
-          charCount += msg.length;
+          const line = '> ' + msg.replace(/\n+/g, ' ').trim();
+          const lineBytes = new Blob([line]).size;
+          if (byteCount + lineBytes > capBytes) { capped = true; break; }
+          convoLines.push(line);
+          byteCount += lineBytes;
           userMessageCount++;
           wordCount += msg.split(/\s+/).length;
         }
-        lines.push('');
+
+        if (convoLines.length > 1) {
+          lines.push(...convoLines);
+          lines.push('');
+        }
       }
 
-      if (stopped) {
-        lines.push('[... truncated to keep output manageable for Claude ...]');
+      if (capped) {
+        lines.push(`[Output capped at ${capBytes === Infinity ? 'unlimited' : (capBytes / 1024 / 1024).toFixed(0) + ' MB'} — conversations are ordered newest first, so your most recent history is included]`);
       }
 
-      return { output: lines.join('\n'), userMessageCount, wordCount };
+      return { output: lines.join('\n'), userMessageCount, wordCount, capped };
     }
 
     function extractUserMessages(convo) {
@@ -550,6 +699,17 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 At the end, synthesize this into a **Personal System Prompt** I can paste into Claude's Custom Instructions — a short paragraph (150–250 words) that captures who I am, what I work on, and how I prefer to collaborate.`;
     }
 
+    // ── Cover message ────────────────────────────────────────────────────────
+    function buildCoverMessage() {
+      return `I've attached two files:
+
+1. chatgpt-profile-data.txt — my full ChatGPT conversation history, filtered to show only my messages (not the AI responses), plus all conversation titles.
+
+2. chatgpt-profile-prompt.txt — instructions for what I'd like you to do with this data.
+
+Please read both files and follow the instructions in the prompt file.`;
+    }
+
     // ── UI helpers ───────────────────────────────────────────────────────────
     function setStep(n) {
       [1,2,3].forEach(i => {
@@ -573,22 +733,30 @@ At the end, synthesize this into a **Personal System Prompt** I can paste into C
       document.getElementById('progress-label').textContent = label;
     }
 
-    async function copyOutput(id, btn) {
-      const text = document.getElementById(id).textContent;
+    function downloadData() {
+      if (!window._outputText) return;
+      download(window._outputText, 'chatgpt-profile-data.txt');
+    }
+
+    function downloadPrompt() {
+      const text = document.getElementById('prompt-textarea').value;
+      download(text, 'chatgpt-profile-prompt.txt');
+    }
+
+    function download(text, filename) {
+      const blob = new Blob([text], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+    }
+
+    async function copyCover(btn) {
+      const text = document.getElementById('cover-box').textContent;
       await navigator.clipboard.writeText(text);
       const orig = btn.textContent;
       btn.textContent = '✓ Copied!';
       setTimeout(() => btn.textContent = orig, 2000);
-      showToast('Copied to clipboard');
-    }
-
-    function downloadOutput() {
-      if (!window._outputText) return;
-      const blob = new Blob([window._outputText], { type: 'text/plain' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'chatgpt-profile-extract.txt';
-      a.click();
     }
 
     function showToast(msg) {
@@ -600,6 +768,11 @@ At the end, synthesize this into a **Personal System Prompt** I can paste into C
 
     function fmt(n) {
       return n.toLocaleString();
+    }
+
+    function fmtBytes(bytes) {
+      if (bytes < 1000 * 1024) return Math.round(bytes / 1024) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
     }
 
     function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
