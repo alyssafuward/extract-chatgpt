@@ -1,4 +1,4 @@
-# extract-chatgpt
+# ChatGPT Me
 
 Turn your ChatGPT export into a Claude-ready working profile — in your browser, with no data leaving your computer.
 
@@ -10,7 +10,7 @@ This tool reads your ChatGPT export, strips out all the AI responses, and produc
 
 ## How to use
 
-1. [Download `extract-chatgpt.html`](https://github.com/alyssafuward/extract-chatgpt/releases/latest) from the latest release
+1. [Download `chatgpt-me.html`](https://github.com/alyssafuward/chatgpt-me/releases/latest) from the latest release
 2. Open it in any browser — no install, no internet required
 3. Export your ChatGPT data: **ChatGPT → Settings → Data Controls → Export Data**
 4. Drop your export (ZIP or JSON files) into the tool
