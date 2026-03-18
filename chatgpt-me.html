@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src blob:;" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src blob:; frame-ancestors 'none';" />
   <title>ChatGPT Me</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0f0f10;
-      --surface: #1a1a1d;
-      --border: #2e2e33;
+      --bg: #f7f6f3;
+      --surface: #ffffff;
+      --border: #e0ddd8;
       --accent: #cc785c;
       --accent-dim: #99522f;
-      --text: #e8e6e0;
-      --muted: #888880;
+      --text: #1a1916;
+      --muted: #888078;
       --radius: 10px;
     }
 
@@ -41,7 +41,8 @@
       margin-bottom: 6px;
     }
 
-    .subtitle { color: var(--muted); margin-bottom: 36px; font-size: 0.95rem; }
+    .subtitle { color: var(--muted); margin-bottom: 12px; font-size: 0.95rem; }
+    .subtitle:last-of-type { margin-bottom: 36px; }
 
     .steps {
       display: flex;
@@ -63,7 +64,7 @@
     }
 
     .step.active { border-color: var(--accent); color: var(--accent); }
-    .step.done { border-color: #3a3a3f; color: #555; }
+    .step.done { border-color: #ccc8c0; color: #aaa; }
 
     .step-num {
       width: 18px; height: 18px;
@@ -91,7 +92,7 @@
 
     .drop-zone:hover, .drop-zone.drag-over {
       border-color: var(--accent);
-      background: #1f1a18;
+      background: #f0ece8;
     }
 
     .drop-icon { font-size: 2.5rem; margin-bottom: 12px; }
@@ -182,12 +183,12 @@
     .btn-wrap { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
 
     .notice {
-      background: #1a1f18;
-      border: 1px solid #2e3a2a;
+      background: #f0f5ee;
+      border: 1px solid #c8dcc0;
       border-radius: var(--radius);
       padding: 14px 18px;
       font-size: 0.84rem;
-      color: #88a880;
+      color: #4a7a44;
       margin-top: 20px;
       display: flex;
       gap: 10px;
@@ -200,7 +201,7 @@
       bottom: 28px;
       left: 50%;
       transform: translateX(-50%) translateY(20px);
-      background: #2a2a2f;
+      background: #ffffff;
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 10px 20px;
@@ -242,13 +243,13 @@
     }
 
     .cover-box {
-      background: #1a1f18;
-      border: 1px solid #2e3a2a;
+      background: #f0f5ee;
+      border: 1px solid #c8dcc0;
       border-radius: var(--radius);
       padding: 16px 20px;
       font-size: 0.88rem;
       line-height: 1.7;
-      color: #c8dcc0;
+      color: #3a6035;
       white-space: pre-wrap;
       font-style: italic;
     }
@@ -263,16 +264,16 @@
 
     .cap-status.complete {
       display: block;
-      background: #1a2318;
-      color: #7db87d;
-      border: 1px solid #2e4a2a;
+      background: #eef5ec;
+      color: #3a7a3a;
+      border: 1px solid #b8d8b8;
     }
 
     .cap-status.capped {
       display: block;
-      background: #211e14;
-      color: #c8a84a;
-      border: 1px solid #3a3220;
+      background: #fdf6e3;
+      color: #8a6a10;
+      border: 1px solid #e8d898;
     }
 
     .section-label {
@@ -289,7 +290,7 @@
 
     .badge {
       display: inline-block;
-      background: #2a2018;
+      background: #fceee8;
       color: var(--accent);
       border-radius: 4px;
       padding: 1px 8px;
@@ -328,7 +329,7 @@
     }
 
     .seg-btn:last-child { border-right: none; }
-    .seg-btn:hover { background: #222226; color: var(--text); }
+    .seg-btn:hover { background: #f0ece8; color: var(--text); }
     .seg-btn.active { background: var(--accent); color: #fff; }
 
     .cap-custom {
@@ -354,6 +355,36 @@
 
     .cap-input:focus { outline: none; border-color: var(--accent); }
 
+    .file-list {
+      margin-top: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      font-size: 0.83rem;
+      color: var(--muted);
+    }
+
+    .file-list-header {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .file-list-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 0;
+      color: var(--text);
+    }
+
+    .file-list-item + .file-list-item { border-top: 1px solid var(--border); }
+
+    .file-list-item-icon { color: var(--muted); flex-shrink: 0; }
+
     scrollbar-width { thin; }
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -363,7 +394,8 @@
 <body>
   <div class="container">
     <h1>ChatGPT Me</h1>
-    <p class="subtitle">Turn your ChatGPT export into a Claude-ready working profile — entirely in your browser. Nothing is uploaded anywhere.</p>
+    <p class="subtitle">Moving from ChatGPT to Claude? Common approaches include exporting your memory or asking ChatGPT to summarize you.<br><br>This app takes a different approach: extract your raw conversation history and let Claude build your profile from the source.</p>
+    <p class="subtitle">Once generated, review and edit it, combine it with any other profile exercises you've done, then paste it wherever you'd like Claude to use it — a system prompt, custom instructions, or memory.</p>
 
     <div class="steps">
       <div class="step active" id="step-1"><span class="step-num">1</span> Upload export</div>
@@ -379,6 +411,9 @@
       <br>
       <button class="btn btn-outline" onclick="document.getElementById('file-input').click()">Browse files</button>
     </div>
+
+    <div class="file-list hidden" id="file-list"></div>
+    <button class="btn hidden" id="analyze-btn">Analyze my conversations</button>
 
     <div class="notice">
       <span class="notice-icon">🔒</span>
@@ -468,9 +503,39 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     dropZone.addEventListener('drop', e => {
       e.preventDefault();
       dropZone.classList.remove('drag-over');
-      handleFiles(e.dataTransfer.files);
+      stageFiles(e.dataTransfer.files);
     });
-    fileInput.addEventListener('change', e => handleFiles(e.target.files));
+    fileInput.addEventListener('change', e => stageFiles(e.target.files));
+
+    document.getElementById('analyze-btn').addEventListener('click', () => {
+      if (window._stagedFiles) handleFiles(window._stagedFiles);
+    });
+
+    function setAnalyzeBtnLoading(loading) {
+      const btn = document.getElementById('analyze-btn');
+      if (loading) {
+        btn.disabled = true;
+        btn.textContent = 'Extracting…';
+      } else {
+        btn.disabled = false;
+        btn.textContent = 'Extract my conversations';
+      }
+    }
+
+    function stageFiles(fileList) {
+      const files = Array.from(fileList);
+      if (!files.length) return;
+      window._stagedFiles = files;
+
+      const listEl = document.getElementById('file-list');
+      listEl.innerHTML = '<div class="file-list-header">Files staged for analysis</div>' +
+        files.map(f => `<div class="file-list-item"><span class="file-list-item-icon">📄</span>${f.name} <span style="margin-left:auto;font-size:0.78rem;color:var(--muted)">${fmtBytes(f.size)}</span></div>`).join('');
+      listEl.classList.remove('hidden');
+
+      const btn = document.getElementById('analyze-btn');
+      btn.textContent = 'Extract my conversations';
+      btn.classList.remove('hidden');
+    }
 
     // ── Cap control ──────────────────────────────────────────────────────────
     function setCap(btn) {
@@ -498,9 +563,18 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     // ── Main entry ───────────────────────────────────────────────────────────
     async function handleFiles(fileList) {
       const files = Array.from(fileList);
+      const MAX_FILE_SIZE = 500 * 1024 * 1024; // 500 MB
+      for (const file of files) {
+        if (file.size > MAX_FILE_SIZE) {
+          showToast(`"${file.name}" exceeds the 500 MB limit — please export a smaller date range.`);
+          return;
+        }
+      }
+      setAnalyzeBtnLoading(true);
       setStep(2);
       setProgress(0, 'Reading files…');
       showProgress();
+      document.getElementById('progress-wrap').scrollIntoView({ behavior: 'smooth', block: 'center' });
 
       let allConversations = [];
 
@@ -530,6 +604,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         showToast('No conversations found. Make sure you uploaded a ChatGPT export.');
         resetProgress();
         setStep(1);
+        setAnalyzeBtnLoading(false);
         return;
       }
 
@@ -565,6 +640,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
       setProgress(100, 'Done!');
       setStep(3);
+      setAnalyzeBtnLoading(false);
 
       // Store for download
       window._outputText = output;
@@ -697,7 +773,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
 8. **My prompting style** — Do I share full documents, snippets, or describe things abstractly? Do I ask iterative follow-ups or prefer one-shot answers?
 
-At the end, synthesize this into a **Personal System Prompt** I can paste into Claude's Custom Instructions — a short paragraph (150–250 words) that captures who I am, what I work on, and how I prefer to collaborate.`;
+At the end, synthesize this into a **Personal System Prompt** — a short paragraph (150–250 words) that captures who I am, what I work on, and how I prefer to collaborate.`;
     }
 
     // ── Cover message ────────────────────────────────────────────────────────
