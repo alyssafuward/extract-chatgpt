@@ -41,6 +41,15 @@
       margin-bottom: 6px;
     }
 
+    .byline {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .byline a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+    .byline a:hover { color: var(--text); }
+
     .subtitle { color: var(--muted); margin-bottom: 12px; font-size: 0.95rem; }
 
     .steps {
@@ -409,6 +418,7 @@
 <body>
   <div class="container">
     <h1>ChatGPT Me</h1>
+    <p class="byline">by <a href="https://substack.com/@alyssafuward" target="_blank" rel="noopener">Alyssa Fu Ward</a></p>
     <p class="subtitle">Moving from ChatGPT to Claude? Common approaches include exporting your memory or asking ChatGPT to summarize you.<br><br>This app takes a different approach: extract your raw conversation history and let Claude build your profile from the source.</p>
     <p class="subtitle">Once generated, review and edit it, combine it with any other profile exercises you've done, then paste it wherever you'd like Claude to use it — a system prompt, custom instructions, or memory.</p>
 
